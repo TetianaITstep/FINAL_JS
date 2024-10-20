@@ -6,6 +6,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
       href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
@@ -18,13 +22,26 @@
       <h1 class="title">My Calendar</h1>
       <div class="content_container">
         <div class="calendar-container">
-          <button id="prev-month"></button>
-          <span id="month-year"></span>
-          <button id="next-month"></button>
+          <div class="buttons_months">
+            <button class="prevMonthBtn" id="prevMonth">
+              <i
+                class="fa-solid fa-arrow-right fa-2xl"
+                style="color: #ffd84d"
+              ></i>
+            </button>
+            <span id="monthName"></span>
+            <button class="nextMonthColor" id="nextMonth">
+              <i
+                class="fa-solid fa-arrow-right fa-2xl"
+                style="color: #ffd84d"
+              ></i>
+            </button>
+          </div>
 
           <div class="calendar"></div>
         </div>
         <div class="mynotes">
+          <i class="fa-solid fa-pen fa-xl" style="color: #ffd84d"></i>
           <p class="mynotes_title">My Notes</p>
         </div>
       </div>

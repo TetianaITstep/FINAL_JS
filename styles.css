@@ -48,7 +48,7 @@ main {
   grid-template-rows: repeat(5, 80px);
   gap: 6px;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .day_area {
@@ -75,6 +75,8 @@ main {
   top: 3%;
   left: 5%;
   margin: 0;
+  border-bottom: 1px solid
+    linear-gradient(to right, rgba(255, 184, 52, 0.874) 50%, transparent 50%);
 }
 .mynotes {
   background: linear-gradient(
@@ -95,4 +97,27 @@ main {
 }
 .highlight {
   border: 2px solid rgba(255, 184, 52, 0.874);
+}
+
+.white {
+  color: white;
+}
+
+.buttons_months {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 38px;
+}
+.prevMonthBtn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transform: rotate(180deg);
+}
+
+.nextMonthColor {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
