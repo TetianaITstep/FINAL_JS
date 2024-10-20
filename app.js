@@ -22,6 +22,10 @@ function generateDays() {
     day.textContent = i;
     calendar.appendChild(day);
   }
+  const today = new Date().getDate();
+  if (i === today) {
+    day.classList.add("highlight");
+  } //вернутись до цього
 }
 
 generateDays();
