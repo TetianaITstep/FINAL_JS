@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  box-sizing: border-box;
+}
+
+.calendar-container {
+  text-align: center;
+  margin: 20px;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 80px);
+  grid-template-rows: repeat(5, 80px);
+  gap: 6px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.day_area {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
