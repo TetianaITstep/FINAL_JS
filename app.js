@@ -121,6 +121,24 @@ function createModal(day) {
     planningDiv.appendChild(timeInput);
     planningDiv.appendChild(saveButton);
 
+    saveButton.addEventListener("click", () => {
+      const noteText = notesInput.value;
+      const noteTime = timeInput.value;
+      notesStorage[day.textContent] = {
+        text: noteText,
+        time: noteTime,
+      };
+      const plansList = createElement("ul", { classes: ["plans-list"] });
+
+      const plansListItem = createElement("li", {
+        classes: ["plans-list-item"],
+      });
+      plansList.appendChild(plansListItem);
+      planningDiv.appendChild(plansList);
+      console.log(notesStorage);
+      plansListItem.textContent = `Note: ${noteText}, Time: ${noteTime}`;
+    });
+
     myNotesModal.appendChild(planningDiv);
   } else {
     planningDiv.querySelector("textarea").value = "";
@@ -133,3 +151,4 @@ function createModal(day) {
 // 2) знайти гарніший варіант тайм-інпуту
 // 3) зробити так щоб плани відображались і зберігались у відповідних днях
 // 4) підсвітити дні з планами
+// 5) зробити так щоб плани не двигали контейнер
