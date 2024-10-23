@@ -11,69 +11,15 @@ function createElement(tag, { classes, attributes }, ...children) {
   element.append(...children);
   return element;
 }
-
 const calendar = document.querySelector(".calendar");
-
-// function generateDaysFirstVersion() {
-//   calendar.innerHTML = "";
-//   for (let i = 1; i <= 31; i++) {
-//     const day = createElement("div", {
-//       classes: ["day_area"],
-//     });
-//     day.textContent = i;
-//     calendar.appendChild(day);
-//     const today = new Date().getDate();
-// if (i === today) {
-//   day.classList.add("highlight");
-// }
-//   }
-// }
-
-// generateDaysFirstVersion();
-
-function generateDaysFor28() {
-  calendar.innerHTML = "";
-  for (let i = 1; i <= 28; i++) {
-    const day = createElement("div", { classes: ["day_area"] });
-    day.textContent = i;
-
-    calendar.appendChild(day);
-    const today = new Date().getDate();
-    if (i === today) {
-      day.classList.add("highlight");
-    }
-  }
+function getDaysNumber(year, month) {
+  return new Date(year, month + 1, 0).getDate();
 }
 
-function generateDaysFor29() {
-  calendar.innerHTML = "";
-  for (let i = 1; i <= 29; i++) {
-    const day = createElement("div", { classes: ["day_area"] });
-    day.textContent = i;
-    calendar.appendChild(day);
-  }
-}
-
-function generateDaysFor30() {
-  calendar.innerHTML = "";
-  for (let i = 1; i <= 30; i++) {
-    const day = createElement("div", { classes: ["day_area"] });
-    day.textContent = i;
-    calendar.appendChild(day);
-  }
-}
-
-function generateDaysFor31() {
-  calendar.innerHTML = "";
-  for (let i = 1; i <= 31; i++) {
-    const day = createElement("div", { classes: ["day_area"] });
-    day.textContent = i;
-    calendar.appendChild(day);
-  }
-}
-
+let currentMonthIndex = new Date().getMonth();
+let currentYear = new Date().getFullYear();
 const monthName = document.getElementById("monthName");
-
+// currentYear.classList.add("year_number_size");
 const monthArrow = [
   "January",
   "February",
@@ -89,49 +35,101 @@ const monthArrow = [
   "December",
 ];
 
-let currentMonthIndex = new Date().getMonth();
-let currentYear = new Date().getFullYear();
 function changemonthName() {
-  const currentMonth = monthArrow.find(
-    (month, index) => index === currentMonthIndex
-  );
-  monthName.textContent = currentMonth;
+  const currentMonth = monthArrow[currentMonthIndex];
+  monthName.textContent = `${currentMonth} ${currentYear}`;
   monthName.classList.add("white");
 }
-changemonthName();
 
-//!задачі на наст раз:
-//поєднати дні з місяцями, щоб змінювалось і то і то - переробити логіку
-//прикрутити роки
-//функція для відкриття вікна, при натисканні на день
-function isLeapYear(year) {
-  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-}
 function generateDays() {
-  if (currentMonthIndex === 1) {
-    if (isLeapYear(currentYear)) {
-      generateDaysFor29();
-    } else {
-      generateDaysFor28();
+  calendar.innerHTML = "";
+  const today = new Date();
+  const daysNumber = getDaysNumber(currentYear, currentMonthIndex);
+
+  for (let i = 1; i <= daysNumber; i++) {
+    const day = createElement("div", { classes: ["day_area"] });
+    day.textContent = i;
+    calendar.appendChild(day);
+
+    if (
+      i === today.getDate() &&
+      currentMonthIndex === today.getMonth() &&
+      currentYear === today.getFullYear()
+    ) {
+      day.classList.add("highlight");
     }
-  } else if ([3, 5, 8, 10].includes(currentMonthIndex)) {
-    generateDaysFor30();
-  } else {
-    generateDaysFor31();
+    day.addEventListener("click", () => {
+      createModal(day);
+    });
   }
 }
+
+generateDays();
 
 const prevMonthBtn = document.getElementById("prevMonth");
 prevMonthBtn.addEventListener("click", () => {
   currentMonthIndex--;
-  if (currentMonthIndex < 0) currentMonthIndex = 11;
+  if (currentMonthIndex < 0) {
+    currentMonthIndex = 11;
+    currentYear--;
+  }
   changemonthName();
   generateDays();
 });
+
 const nextMonthBtn = document.getElementById("nextMonth");
 nextMonthBtn.addEventListener("click", () => {
   currentMonthIndex++;
-  if (currentMonthIndex > 11) currentMonthIndex = 0;
+  if (currentMonthIndex > 11) {
+    currentMonthIndex = 0;
+    currentYear++;
+  }
   changemonthName();
   generateDays();
 });
+
+changemonthName();
+const notesStorage = {};
+
+function createModal(day) {
+  const myNotesModal = document.getElementById("mynotes");
+
+  myNotesModal.classList.remove("hidden");
+
+  const notesTitle = myNotesModal.querySelector(".mynotes_title");
+  const currentMonth = monthArrow[currentMonthIndex];
+
+  notesTitle.textContent = `My Notes for ${currentMonth}  ${day.textContent}`;
+  let planningDiv = myNotesModal.querySelector(".planningDiv");
+
+  if (!planningDiv) {
+    planningDiv = createElement("div", { classes: ["planningDiv"] });
+
+    const notesInput = createElement("textarea", {
+      attributes: { placeholder: "Write your notes here..." },
+    });
+
+    const timeInput = createElement("input", {
+      attributes: { type: "time" },
+      classes: ["time-input"],
+    });
+
+    const saveButton = createElement("button", { classes: ["save_button"] });
+    saveButton.textContent = "Save";
+
+    planningDiv.appendChild(notesInput);
+    planningDiv.appendChild(timeInput);
+    planningDiv.appendChild(saveButton);
+
+    myNotesModal.appendChild(planningDiv);
+  } else {
+    planningDiv.querySelector("textarea").value = "";
+    planningDiv.querySelector("input[type='time']").value = "";
+  }
+}
+
+//на наст раз
+// 1) додати подію на сейв кнопку, що події зберігались в об'єкт
+// 2) знайти гарніший варіант тайм-інпуту
+// 3) зробити так щоб плани відображались і зберігались у відповідних днях
+// 4) підсвітити дні з планами
