@@ -17,9 +17,10 @@ function getDaysNumber(year, month) {
 }
 
 let currentMonthIndex = new Date().getMonth();
+
 let currentYear = new Date().getFullYear();
 const monthName = document.getElementById("monthName");
-// currentYear.classList.add("year_number_size");
+
 const monthArrow = [
   "January",
   "February",
@@ -91,15 +92,27 @@ nextMonthBtn.addEventListener("click", () => {
 changemonthName();
 const notesStorage = {};
 
+function saveToLocalStorage() {
+  localStorage.setItem("notesStorage", JSON.stringify(notesStorage));
+}
+
+function loadFromLocalStorage() {
+  const storedNotes = localStorage.getItem("notesStorage");
+  if (storedNotes) {
+    Object.assign(notesStorage, JSON.parse(storedNotes));
+  }
+}
+
+loadFromLocalStorage();
+
 function createModal(day) {
   const myNotesModal = document.getElementById("mynotes");
-
   myNotesModal.classList.remove("hidden");
 
   const notesTitle = myNotesModal.querySelector(".mynotes_title");
   const currentMonth = monthArrow[currentMonthIndex];
+  notesTitle.textContent = `My Notes for ${currentMonth} ${day.textContent}`;
 
-  notesTitle.textContent = `My Notes for ${currentMonth}  ${day.textContent}`;
   let planningDiv = myNotesModal.querySelector(".planningDiv");
 
   if (!planningDiv) {
@@ -110,8 +123,14 @@ function createModal(day) {
     });
 
     const timeInput = createElement("input", {
-      attributes: { type: "time" },
-      classes: ["time-input"],
+      attributes: { placeholder: "Choose time..." },
+      classes: ["flatpickr-input"],
+    });
+    flatpickr(timeInput, {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
     });
 
     const saveButton = createElement("button", { classes: ["save_button"] });
@@ -124,31 +143,65 @@ function createModal(day) {
     saveButton.addEventListener("click", () => {
       const noteText = notesInput.value;
       const noteTime = timeInput.value;
-      notesStorage[day.textContent] = {
+      if (noteText === "" || noteTime === "") {
+        alert("Please fill in both fields.");
+        return;
+      }
+
+      if (!notesStorage[day.textContent]) {
+        notesStorage[day.textContent] = [];
+      }
+      if (notesStorage[day.textContent].length >= 7) {
+        return;
+      }
+
+      notesStorage[day.textContent].push({
         text: noteText,
         time: noteTime,
-      };
-      const plansList = createElement("ul", { classes: ["plans-list"] });
-
-      const plansListItem = createElement("li", {
-        classes: ["plans-list-item"],
       });
-      plansList.appendChild(plansListItem);
-      planningDiv.appendChild(plansList);
-      console.log(notesStorage);
-      plansListItem.textContent = `Note: ${noteText}, Time: ${noteTime}`;
+
+      saveToLocalStorage();
+
+      updatePlansList(planningDiv, day.textContent);
+
+      notesInput.value = "";
+      timeInput.value = "";
     });
 
     myNotesModal.appendChild(planningDiv);
-  } else {
-    planningDiv.querySelector("textarea").value = "";
-    planningDiv.querySelector("input[type='time']").value = "";
   }
+
+  updatePlansList(planningDiv, day.textContent);
 }
 
-//на наст раз
-// 1) додати подію на сейв кнопку, що події зберігались в об'єкт
-// 2) знайти гарніший варіант тайм-інпуту
-// 3) зробити так щоб плани відображались і зберігались у відповідних днях
-// 4) підсвітити дні з планами
-// 5) зробити так щоб плани не двигали контейнер
+function updatePlansList(planningDiv, dayKey) {
+  let plansList = planningDiv.querySelector(".plans-list");
+  if (!plansList) {
+    plansList = createElement("ul", { classes: ["plans-list"] });
+    planningDiv.appendChild(plansList);
+  } else {
+    plansList.innerHTML = "";
+  }
+
+  const dayNotes = notesStorage[dayKey] || [];
+
+  for (let i = 0; i < dayNotes.length; i++) {
+    const note = dayNotes[i];
+    const plansListItem = createElement("li", { classes: ["plans-list-item"] });
+    plansListItem.textContent = `Note: ${note.text}, Time: ${note.time}`;
+
+    const deleteButton = createElement("button", {
+      classes: ["delete-button"],
+    });
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", () => {
+      dayNotes.splice(i, 1);
+      saveToLocalStorage();
+
+      updatePlansList(planningDiv, dayKey);
+    });
+
+    plansListItem.appendChild(deleteButton);
+    plansList.appendChild(plansListItem);
+  }
+}

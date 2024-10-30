@@ -9,7 +9,8 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   font-family: "Poppins", serif;
-  overflow: hidden;
+  overflow-x: hidden;
+  background-color: rgb(0, 0, 0);
 }
 .overlay {
   position: absolute;
@@ -156,7 +157,7 @@ main {
   margin-top: 10px;
   display: flex;
   flex-direction: column;
-  max-height: 70%;
+  /* max-height: 200px; */
 }
 
 textarea {
@@ -169,9 +170,13 @@ textarea {
   outline: none;
   background-color: #000000b4;
   color: white;
+  font-family: "Poppins", serif;
+  font-size: 16px;
+  max-height: 200px;
+  max-width: 100%;
 }
 
-.time-input {
+.flatpickr-input {
   width: 50%;
   background-color: #000000b4;
   color: white;
@@ -181,6 +186,8 @@ textarea {
   border: none;
   font-size: 16px;
   outline: none;
+  font-family: "Poppins", serif;
+  font-size: 16px;
 }
 
 .save_button {
@@ -196,6 +203,15 @@ textarea {
 
 .save_button:hover {
   background-color: #ada376;
+}
+.delete-button {
+  margin-left: 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #ff7f4d;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
 }
 .falling-leaf {
   position: fixed;
@@ -275,6 +291,32 @@ textarea {
     display: grid;
     grid-template-columns: repeat(7, 60px);
     grid-template-rows: repeat(5, 60px);
+    gap: 6px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  .content_container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .mynotes {
+    width: 90%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+}
+@media (max-width: 500px) {
+  .day_area {
+    width: 50px;
+    height: 50px;
+  }
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 50px);
+    grid-template-rows: repeat(5, 50px);
     gap: 6px;
     justify-content: center;
     margin-top: 10px;
